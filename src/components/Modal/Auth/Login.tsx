@@ -1,6 +1,9 @@
 import { authModalState } from "@/atoms/authModalAtom";
+import { auth } from "@/firebase/clientApp";
+import { FIREBASE_ERRORS } from "@/firebase/errors";
 import { Button, Flex, Input, Text } from "@chakra-ui/react";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { useSetRecoilState } from "recoil";
 
 type Props = {};
@@ -11,9 +14,12 @@ const Login: FC<Props> = () => {
         email: "",
         password: "",
     });
+    const [signInWithEmailAndPassword, user, loading, userErr] =
+        useSignInWithEmailAndPassword(auth);
     const onSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(loginForm);
+        if (!loginForm.email || !loginForm.password) return;
+        signInWithEmailAndPassword(loginForm.email, loginForm.password);
     };
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         setLoginForm((prev) => ({
@@ -71,9 +77,38 @@ const Login: FC<Props> = () => {
                 }}
                 bg="gray.50"
             />
-            <Button type="submit" width="100%" height="36px" my={2}>
+            <Text textAlign="center" color="red" fontSize="0.8rem">
+                {
+                    FIREBASE_ERRORS[
+                        userErr?.message as keyof typeof FIREBASE_ERRORS
+                    ]
+                }
+            </Text>
+            <Button
+                type="submit"
+                width="100%"
+                height="36px"
+                my={2}
+                isLoading={loading}
+            >
                 Log In
             </Button>
+            <Flex fontSize="0.8rem" justify="center" mb={2}>
+                <Text mr={1}>Forgot your password?</Text>
+                <Text
+                    color="blue.500"
+                    fontWeight="700"
+                    cursor="pointer"
+                    onClick={() =>
+                        setAuthModalState((prev) => ({
+                            ...prev,
+                            view: "resetPassword",
+                        }))
+                    }
+                >
+                    Reset
+                </Text>
+            </Flex>
             <Flex fontSize="12px" justify="center">
                 <Text mr={1}>New to Reddit?</Text>
                 <Text

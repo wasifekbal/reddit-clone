@@ -9,12 +9,12 @@ A Reddit clone built with Next.js, Firebase v9, Chakra UI, TypeScript, and Recoi
 - Start the development server: npm run dev or yarn dev
 
 ## Features
-- [Todo] Users can create an account and log in.
-- [Todo] Users can create, edit and delete posts.
-- [Todo] Users can upvote and downvote posts.
-- [Todo] Users can comment on posts.
-- [Todo] Users can view a list of posts and filter by subreddit.
-- [Todo] Posts are paginated and sorted by vote score.
+- [x] Users can create an account and log in.
+- [ ] Todo: Users can create, edit and delete posts.
+- [ ] Todo: Users can upvote and downvote posts.
+- [ ] Todo: Users can comment on posts.
+- [ ] Todo: Users can view a list of posts and filter by subreddit.
+- [ ] Todo: Posts are paginated and sorted by vote score.
 
 ## Stack
 - [Next.js](https://nextjs.org/)

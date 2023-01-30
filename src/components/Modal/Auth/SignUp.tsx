@@ -1,23 +1,37 @@
 import { authModalState } from "@/atoms/authModalAtom";
+import { auth } from "@/firebase/clientApp";
 import { Button, Flex, Input, Text } from "@chakra-ui/react";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { useSetRecoilState } from "recoil";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { FIREBASE_ERRORS } from "@/firebase/errors";
 
 type Props = {};
 
 const SignUp: FC<Props> = () => {
     const setAuthModalState = useSetRecoilState(authModalState);
-    const [loginForm, setLoginForm] = useState({
+    const [signUpForm, setSignUpForm] = useState({
         email: "",
         password: "",
         confirmPassword: "",
     });
+
+    const [err, setErr] = useState("");
+
+    const [createUserWithEmailAndPassword, user, loading, userErr] =
+        useCreateUserWithEmailAndPassword(auth);
+
     const onSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(loginForm);
+        if (err) setErr("");
+        if (signUpForm.password !== signUpForm.confirmPassword) {
+            setErr("Passwords did not matched !!");
+            return;
+        }
+        createUserWithEmailAndPassword(signUpForm.email, signUpForm.password);
     };
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setLoginForm((prev) => ({
+        setSignUpForm((prev) => ({
             ...prev,
             [event.target.name]: event.target.value,
         }));
@@ -96,7 +110,19 @@ const SignUp: FC<Props> = () => {
                 }}
                 bg="gray.50"
             />
-            <Button type="submit" width="100%" height="36px" my={2}>
+            <Text textAlign="center" color="red" fontSize="0.8rem">
+                {err ||
+                    FIREBASE_ERRORS[
+                        userErr?.message as keyof typeof FIREBASE_ERRORS
+                    ]}
+            </Text>
+            <Button
+                type="submit"
+                width="100%"
+                height="36px"
+                my={2}
+                isLoading={loading}
+            >
                 Sign Up
             </Button>
             <Flex fontSize="12px" justify="center">
@@ -112,7 +138,7 @@ const SignUp: FC<Props> = () => {
                         }))
                     }
                 >
-                    Sign Up
+                    Log In
                 </Text>
             </Flex>
         </form>

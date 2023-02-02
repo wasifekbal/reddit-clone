@@ -1,30 +1,25 @@
 import { auth, firestore } from "@/firebase/clientApp";
 import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
-    Button,
-    Divider,
     Box,
-    Text,
-    InputGroup,
-    Input,
-    InputLeftElement,
-    Stack,
+    Button,
     Checkbox,
+    Divider,
     Flex,
     Icon,
+    Input,
+    InputGroup,
+    InputLeftElement,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    Stack,
+    Text,
 } from "@chakra-ui/react";
-import {
-    doc,
-    getDoc,
-    serverTimestamp,
-    setDoc,
-} from "firebase/firestore";
+import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
 import { ChangeEvent, FC, useState } from "react";
 import { EyeFill, LockFill, PersonFill } from "react-bootstrap-icons";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -65,19 +60,36 @@ const CreateCommunityModal: FC<Props> = ({ open, handleClose }) => {
         }
         setLoading(true);
         try {
-            /* Checks if the community name is already taken. */
-            const docRef = doc(firestore, "communities", communityName);
-            const communityDoc = await getDoc(docRef);
-            if (communityDoc.exists()) {
-                throw new Error(
-                    `Sorry, r/${communityName} is already taken. Try another name.`
+            await runTransaction(firestore, async (txn) => {
+                /* Checking if the community name is already taken. */
+                const docRef = doc(firestore, "communities", communityName);
+                const communityDoc = await txn.get(docRef);
+                if (communityDoc.exists()) {
+                    throw new Error(
+                        `Sorry, r/${communityName} is already taken. Try another name.`
+                    );
+                }
+                /* creating a new community doc in firestore */
+                txn.set(docRef, {
+                    creatorId: user?.uid,
+                    createdAt: serverTimestamp(),
+                    numberOfMembers: 1,
+                    privacyType: communityType,
+                });
+
+                /* creating a communityList sub-collection for the user. */
+                /* storing the entry of the newly created community. */
+                txn.set(
+                    doc(
+                        firestore,
+                        `users/${user?.uid}/communityList`,
+                        communityName
+                    ),
+                    {
+                        communityId: communityName,
+                        isModerator: true,
+                    }
                 );
-            }
-            await setDoc(docRef, {
-                creatorId: user?.uid,
-                createdAt: serverTimestamp(),
-                numberOfMembers: 1,
-                privacyType: communityType,
             });
         } catch (error: any) {
             console.log("createCommunity err", error);

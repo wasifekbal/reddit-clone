@@ -1,3 +1,4 @@
+import { createCommModalState } from "@/atoms/createCommModalAtom";
 import { auth, firestore } from "@/firebase/clientApp";
 import {
     Box,
@@ -17,20 +18,19 @@ import {
     ModalHeader,
     ModalOverlay,
     Stack,
-    Text,
+    Text
 } from "@chakra-ui/react";
 import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { EyeFill, LockFill, PersonFill } from "react-bootstrap-icons";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useRecoilState } from "recoil";
 
-type Props = {
-    open: boolean;
-    handleClose: () => void;
-};
+type Props = {};
 
-const CreateCommunityModal: FC<Props> = ({ open, handleClose }) => {
+export default function CreateCommunityModal({}: Props) {
     const [user] = useAuthState(auth);
+    const [modalState, setModalState] = useRecoilState(createCommModalState);
     const [communityName, setCommunityName] = useState("");
     const [charRem, setCharRem] = useState(21);
     const [communityType, setCommunityType] = useState("public");
@@ -39,7 +39,8 @@ const CreateCommunityModal: FC<Props> = ({ open, handleClose }) => {
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const text = e.target.value;
-        if (text.length > 21) return;
+        if (text.length > 21)
+            return;
         setCharRem(21 - text.length);
         setCommunityName(text);
     };
@@ -99,7 +100,11 @@ const CreateCommunityModal: FC<Props> = ({ open, handleClose }) => {
     };
 
     return (
-        <Modal isOpen={open} onClose={handleClose} size="xl">
+        <Modal
+            isOpen={modalState.open}
+            onClose={() => setModalState({ open: false })}
+            size="xl"
+        >
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader
@@ -148,8 +153,7 @@ const CreateCommunityModal: FC<Props> = ({ open, handleClose }) => {
                                     borderColor: "black",
                                 }}
                                 value={communityName}
-                                onChange={handleChange}
-                            />
+                                onChange={handleChange} />
                         </InputGroup>
                         <Text
                             fontSize="xs"
@@ -176,8 +180,7 @@ const CreateCommunityModal: FC<Props> = ({ open, handleClose }) => {
                                         <Icon
                                             as={PersonFill}
                                             fontSize={20}
-                                            color="gray.500"
-                                        />
+                                            color="gray.500" />
                                         <Text
                                             fontSize="sm"
                                             fontWeight={600}
@@ -203,8 +206,7 @@ const CreateCommunityModal: FC<Props> = ({ open, handleClose }) => {
                                         <Icon
                                             as={EyeFill}
                                             fontSize={20}
-                                            color="gray.500"
-                                        />
+                                            color="gray.500" />
                                         <Text
                                             fontSize="sm"
                                             fontWeight={600}
@@ -230,8 +232,7 @@ const CreateCommunityModal: FC<Props> = ({ open, handleClose }) => {
                                         <Icon
                                             as={LockFill}
                                             fontSize={20}
-                                            color="gray.500"
-                                        />
+                                            color="gray.500" />
                                         <Text
                                             fontSize="sm"
                                             fontWeight={600}
@@ -272,7 +273,7 @@ const CreateCommunityModal: FC<Props> = ({ open, handleClose }) => {
                         variant="outline"
                         height={8}
                         mr={3}
-                        onClick={handleClose}
+                        onClick={() => setModalState({ open: false })}
                     >
                         Cancel
                     </Button>
@@ -288,6 +289,4 @@ const CreateCommunityModal: FC<Props> = ({ open, handleClose }) => {
             </ModalContent>
         </Modal>
     );
-};
-
-export default CreateCommunityModal;
+}

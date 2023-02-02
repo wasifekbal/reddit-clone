@@ -1,16 +1,8 @@
-import { FC } from "react";
-import {
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    Flex,
-    Icon,
-    Text,
-} from "@chakra-ui/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import Communities from "./Communities";
 import { HomeFilled } from "@ant-design/icons";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import { Flex, Icon, Menu, MenuButton, MenuList, Text } from "@chakra-ui/react";
+import { FC } from "react";
+import Communities from "./Communities";
 
 type Props = {};
 

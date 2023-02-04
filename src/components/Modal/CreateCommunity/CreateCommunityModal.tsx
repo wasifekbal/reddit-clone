@@ -83,7 +83,7 @@ export default function CreateCommunityModal({}: Props) {
                 txn.set(
                     doc(
                         firestore,
-                        `users/${user?.uid}/communityList`,
+                        `users/${user?.uid}/commSnips`,
                         communityName
                     ),
                     {

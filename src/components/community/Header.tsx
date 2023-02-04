@@ -51,6 +51,7 @@ export default function Header({ communityData }: Props) {
                             variant={isJoined ? "outline" : "solid"}
                             height="1.9rem"
                             px={8}
+                            onClick={()=>{}}
                         >
                             {isJoined ? "Joined" : "Join"}
                         </Button>

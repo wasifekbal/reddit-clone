@@ -13,23 +13,23 @@ export interface Community {
 
 /* type of a community snippet. */
 /* stored with the user's details in commSnips sub-collection. */
-type CommSnip = {
+export type UserCommSnip = {
     communityId: string;
     isModerator?: boolean;
     imageURL?: string;
 };
 
 /* a list of commSnip that will be fetched from user's details. */
-type CommState = {
-    commSnips: CommSnip[];
+type UserCommState = {
+    userCommSnips: UserCommSnip[];
 };
 
 /* default values for global community state */
-const defaultCommState: CommState = {
-    commSnips: [],
+const defaultCommState: UserCommState = {
+    userCommSnips: [],
 };
 
-export const communityState = atom<CommState>({
+export const userCommState = atom<UserCommState>({
     key: "commState",
     default: defaultCommState,
 });

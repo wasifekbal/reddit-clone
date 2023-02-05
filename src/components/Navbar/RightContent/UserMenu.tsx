@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { signOut, User } from "firebase/auth";
 import { auth } from "@/firebase/clientApp";
-import { useSetRecoilState } from "recoil";
+import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { authModalState } from "@/atoms/authModalAtom";
 import {
     BoxArrowInLeft,
@@ -22,13 +22,19 @@ import {
     PersonFill,
     Reddit,
 } from "react-bootstrap-icons";
+import { userCommState } from "@/atoms/communitiesAtom";
 
 type Props = {
     user?: User | null;
 };
 
 const UserMenu: FC<Props> = ({ user }) => {
+    const resetUserCommState = useResetRecoilState(userCommState);
     const setAuthModalState = useSetRecoilState(authModalState);
+    async function handleLogout() {
+        await signOut(auth);
+        resetUserCommState();
+    }
     return (
         <Menu>
             <MenuButton
@@ -98,7 +104,7 @@ const UserMenu: FC<Props> = ({ user }) => {
                             fontSize="sm"
                             fontWeight={600}
                             _hover={{ bg: "gray.100" }}
-                            onClick={() => signOut(auth)}
+                            onClick={handleLogout}
                         >
                             <Flex align="center">
                                 <Icon

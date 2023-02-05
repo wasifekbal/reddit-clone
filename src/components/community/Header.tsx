@@ -1,4 +1,5 @@
 import { Community } from "@/atoms/communitiesAtom";
+import useCommunityData from "@/hooks/useCommunityData";
 import { Box, Button, Flex, Icon, Image, Text } from "@chakra-ui/react";
 import React from "react";
 import { Reddit } from "react-bootstrap-icons";
@@ -8,17 +9,16 @@ type Props = {
 };
 
 export default function Header({ communityData }: Props) {
-    const isJoined = false;
+    const { userCommStateValue, onJoinOrLeaveComm, loading } = useCommunityData();
+    const isJoined = !!userCommStateValue.userCommSnips.find(
+        (item) => item.communityId == communityData.id
+    );
     return (
         /* actual height in reddit is 180px */
         <Flex direction="column" width="100%" height="160px">
             <Box height="45%" bg="blue.400" />
             <Flex justify="center" bg="white" flexGrow={1}>
-                <Flex
-                    width="95%"
-                    maxWidth="910px"
-                    borderColor="red"
-                >
+                <Flex width="95%" maxWidth="910px" borderColor="red">
                     {communityData.imageURL ? (
                         <Image alt="Community picture" />
                     ) : (
@@ -51,7 +51,10 @@ export default function Header({ communityData }: Props) {
                             variant={isJoined ? "outline" : "solid"}
                             height="1.9rem"
                             px={8}
-                            onClick={()=>{}}
+                            onClick={() =>
+                                onJoinOrLeaveComm(communityData, isJoined)
+                            }
+                            isLoading={loading}
                         >
                             {isJoined ? "Joined" : "Join"}
                         </Button>

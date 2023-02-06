@@ -2,11 +2,12 @@ import { Flex, Icon, Text } from "@chakra-ui/react";
 
 type TabItemProps = {
     item: {
+        id: number,
         title: string;
         icon: typeof Icon.arguments;
     };
     selected: boolean;
-    setSelectedTab: (value: string) => void
+    setSelectedTab: (value: number) => void
 };
 export default function TabItem({ item, selected, setSelectedTab }: TabItemProps) {
     return (
@@ -24,7 +25,7 @@ export default function TabItem({ item, selected, setSelectedTab }: TabItemProps
             borderBottomColor={selected ? "blue.500" : "gray.200"}
             borderRight="1px"
             borderRightColor="gray.200"
-            onClick={()=>setSelectedTab(item.title)}
+            onClick={()=>setSelectedTab(item.id)}
             fontWeight="semibold"
         >
             <Icon as={item.icon} mr={2} />

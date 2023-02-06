@@ -11,14 +11,14 @@ export default function PageContentLayout({ children }: Props) {
             {/* This flex is to prevent width at max 910px, */}
             {/* when the parent flex goes beyond it. */}
             <Flex
-                border="1px solid green"
+                /* border="1px solid green" */
                 justify="center"
                 width="95%"
                 maxWidth="910px"
             >
                 {/* left side layout */}
                 <Flex
-                    border="1px solid blue"
+                    /* border="1px solid blue" */
                     direction="column"
                     width={{ base: "100%", md: "65%" }}
                     mr={{ base: 0, md: 6 }}

@@ -3,6 +3,7 @@ import CreatePostLink from "@/components/community/CreatePostLink";
 import Header from "@/components/community/Header";
 import NotFound from "@/components/community/NotFound";
 import PageContentLayout from "@/components/Layout/PageContentLayout";
+import Posts from "@/components/posts/Posts";
 import { firestore } from "@/firebase/clientApp";
 import { doc, getDoc } from "firebase/firestore";
 import { GetServerSidePropsContext } from "next";
@@ -22,6 +23,7 @@ export default function CommunityPage({ communityData }: Props) {
             <PageContentLayout>
                 <>
                     <CreatePostLink />
+                    <Posts communityData={communityData} />
                 </>
                 <div>right</div>
             </PageContentLayout>

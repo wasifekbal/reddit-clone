@@ -104,11 +104,11 @@ export default function NewPostForm({ user }: NewPostFormProps) {
                     imageURL: downloadURL,
                 });
             }
+            router.back();
         } catch (error) {
             console.log("handleCreatePost error: ", error);
         }
         setLoading(false);
-        router.back();
     }
     function onSelectImage(e: ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];

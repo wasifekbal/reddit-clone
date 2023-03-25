@@ -28,7 +28,7 @@ type Props = {
     post: Post;
     userIsCreator: boolean;
     userVoteValue?: number;
-    onVote: () => {};
+    onVote: (post: Post, vote: number, communityId: string) => void;
     onDeletePost: (post: Post) => Promise<boolean>;
     onSelectPost: () => void;
 };
@@ -82,7 +82,7 @@ export default function PostItem({
                     as={userVoteValue === 1 ? ArrowUpCircleFill : ArrowUpCircle}
                     color={userVoteValue === 1 ? "brand.100" : "gray.400"}
                     fontSize={22}
-                    onClick={onVote}
+                    onClick={() => onVote(post, 1, post.communityId)}
                     cursor="pointer"
                 />
                 <Text my={1} fontSize="sm">
@@ -96,7 +96,8 @@ export default function PostItem({
                     }
                     color={userVoteValue === -1 ? "#4379ff" : "gray.400"}
                     fontSize={22}
-                    onClick={onVote}
+                    onClick={() => onVote(post, -1, post.communityId)}
+                    /* onClick={onVote} */
                     cursor="pointer"
                 />
             </Flex>
@@ -110,7 +111,7 @@ export default function PostItem({
                             position="absolute"
                             right={2}
                             top={2}
-                            onClick={()=>setErr(false)}
+                            onClick={() => setErr(false)}
                         />
                     </Alert>
                 )}

@@ -15,7 +15,6 @@ import { InfoCircle, Reddit } from "react-bootstrap-icons";
 import { CakeIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, firestore, storage } from "@/firebase/clientApp";
 import { useRef, useState } from "react";
@@ -29,10 +28,8 @@ type AboutProps = {
 };
 
 export default function About({ communityData }: AboutProps) {
-    const router = useRouter();
-    const { communityId } = router.query;
     const [user] = useAuthState(auth);
-    const { selectedFile, setSelectedFile, onSelectFile } = useSelectedFile();
+    const { selectedFile, onSelectFile } = useSelectedFile();
     const fileRef = useRef<HTMLInputElement>(null);
     const [upImgLoading, setUpImgLoading] = useState(false);
     const setCommStateValue = useSetRecoilState(communityState);
@@ -112,7 +109,7 @@ export default function About({ communityData }: AboutProps) {
                             </Text>
                         )}
                     </Flex>
-                    <Link href={`/r/${communityId}/submit`}>
+                    <Link href={`/r/${communityData.id}/submit`}>
                         <Button mt={2} height="30px" width="full">
                             Create Post
                         </Button>

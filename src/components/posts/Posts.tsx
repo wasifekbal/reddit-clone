@@ -61,7 +61,11 @@ export default function Posts({ communityData }: Props) {
                     key={eachPost.id}
                     post={eachPost}
                     userIsCreator={user?.uid === eachPost.creatorId}
-                    userVoteValue={undefined}
+                    userVoteValue={
+                        postStateValue.postVotes.find(
+                            (vote) => vote.postId === eachPost.id
+                        )?.voteValue
+                    }
                     onVote={onVote}
                     onSelectPost={onSelectPost}
                     onDeletePost={onDeletePost}

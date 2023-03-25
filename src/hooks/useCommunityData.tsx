@@ -2,7 +2,7 @@ import { authModalState } from "@/atoms/authModalAtom";
 import {
     Community,
     UserCommSnip,
-    userCommState,
+    communityState,
 } from "@/atoms/communitiesAtom";
 import { auth, firestore } from "@/firebase/clientApp";
 import {
@@ -18,8 +18,8 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 
 export default function useCommunityData() {
     const [user] = useAuthState(auth);
-    const [userCommStateValue, setUserCommStateValue] =
-        useRecoilState(userCommState);
+    const [commStateValue, setCommStateValue] =
+        useRecoilState(communityState);
     const setAuthModalState = useSetRecoilState(authModalState);
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState("");
@@ -46,8 +46,7 @@ export default function useCommunityData() {
                 collection(firestore, `users/${user?.uid}/commSnips`)
             );
             const snips = snippetDocs.docs.map((doc) => ({ ...doc.data() }));
-            console.log(snips);
-            setUserCommStateValue((prev) => ({
+            setCommStateValue((prev) => ({
                 ...prev,
                 userCommSnips: snips as UserCommSnip[],
             }));
@@ -65,7 +64,7 @@ export default function useCommunityData() {
             // creating a new community snippet in user's commSnips sub-collection
             const newCommSnip: UserCommSnip = {
                 communityId: communityData.id,
-                imageURL: communityData.imageURL || "",
+                logoUrl: communityData.logoUrl || "",
             };
             batch.set(
                 doc(
@@ -81,7 +80,7 @@ export default function useCommunityData() {
             });
             await batch.commit();
             // update recoil user community state with the new entry.
-            setUserCommStateValue((prev) => ({
+            setCommStateValue((prev) => ({
                 ...prev,
                 userCommSnips: [...prev.userCommSnips, newCommSnip],
             }));
@@ -106,7 +105,7 @@ export default function useCommunityData() {
             });
             await batch.commit();
             // update recoil user community state with the new entry.
-            setUserCommStateValue((prev) => ({
+            setCommStateValue((prev) => ({
                 ...prev,
                 userCommSnips: prev.userCommSnips.filter(
                     (item) => item.communityId !== commId
@@ -125,7 +124,7 @@ export default function useCommunityData() {
     }, [user]);
 
     return {
-        userCommStateValue,
+        commStateValue,
         onJoinOrLeaveComm,
         loading,
     };

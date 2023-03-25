@@ -22,14 +22,14 @@ import {
     PersonFill,
     Reddit,
 } from "react-bootstrap-icons";
-import { userCommState } from "@/atoms/communitiesAtom";
+import { communityState } from "@/atoms/communitiesAtom";
 
 type Props = {
     user?: User | null;
 };
 
 const UserMenu: FC<Props> = ({ user }) => {
-    const resetUserCommState = useResetRecoilState(userCommState);
+    const resetUserCommState = useResetRecoilState(communityState);
     const setAuthModalState = useSetRecoilState(authModalState);
     async function handleLogout() {
         await signOut(auth);

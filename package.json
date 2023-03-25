@@ -15,7 +15,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@fontsource/open-sans": "^4.5.14",
-    "@heroicons/react": "^2.0.14",
+    "@heroicons/react": "^2.0.16",
     "@next/font": "13.1.5",
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",

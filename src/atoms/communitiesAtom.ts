@@ -8,7 +8,7 @@ export interface Community {
     numberOfMembers: number;
     privacyType: "public" | "restricted" | "private";
     createdAt?: Timestamp;
-    imageURL?: string;
+    logoUrl?: string;
 }
 
 /* type of a community snippet. */
@@ -16,20 +16,21 @@ export interface Community {
 export type UserCommSnip = {
     communityId: string;
     isModerator?: boolean;
-    imageURL?: string;
+    logoUrl?: string;
 };
 
 /* a list of commSnip that will be fetched from user's details. */
-type UserCommState = {
+type CommunityState = {
     userCommSnips: UserCommSnip[];
+    currentComm?: Community;
 };
 
 /* default values for global community state */
-const defaultCommState: UserCommState = {
+const defaultCommState: CommunityState = {
     userCommSnips: [],
 };
 
-export const userCommState = atom<UserCommState>({
+export const communityState = atom<CommunityState>({
     key: "commState",
     default: defaultCommState,
 });

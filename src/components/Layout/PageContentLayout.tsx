@@ -7,7 +7,7 @@ type Props = {
 
 export default function PageContentLayout({ children }: Props) {
     return (
-        <Flex border="1px solid red" justify="center" paddingY="1rem">
+        <Flex justify="center" paddingY="1rem">
             {/* This flex is to prevent width at max 910px, */}
             {/* when the parent flex goes beyond it. */}
             <Flex

@@ -9,18 +9,29 @@ type Props = {
 };
 
 export default function Header({ communityData }: Props) {
-    const { userCommStateValue, onJoinOrLeaveComm, loading } = useCommunityData();
-    const isJoined = !!userCommStateValue.userCommSnips.find(
+    const { commStateValue, onJoinOrLeaveComm, loading } =
+        useCommunityData();
+    const isJoined = !!commStateValue.userCommSnips.find(
         (item) => item.communityId == communityData.id
     );
+
     return (
         /* actual height in reddit is 180px */
         <Flex direction="column" width="100%" height="160px">
             <Box height="45%" bg="blue.400" />
             <Flex justify="center" bg="white" flexGrow={1}>
                 <Flex width="95%" maxWidth="910px" borderColor="red">
-                    {communityData.imageURL ? (
-                        <Image alt="Community picture" />
+                    {commStateValue.currentComm?.logoUrl ? (
+                        <Image
+                            /* src={communityData.logoUrl} */
+                            src={commStateValue.currentComm.logoUrl}
+                            alt="Community picture"
+                            height="5rem"
+                            position="relative"
+                            top={-3}
+                            border="4px solid white"
+                            borderRadius="full"
+                        />
                     ) : (
                         <Icon
                             as={Reddit}

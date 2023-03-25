@@ -1,5 +1,6 @@
 import { Post } from "@/atoms/postsAtom";
 import { firestore, storage } from "@/firebase/clientApp";
+import useSelectedFile from "@/hooks/useSelectFile";
 import { Alert, AlertIcon, Flex, Icon } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import {
@@ -20,9 +21,9 @@ import {
     Link45deg,
     Mic,
 } from "react-bootstrap-icons";
-import ImageUpload from "./PostForm/ImageUpload";
-import TextInputs from "./PostForm/TextInputs";
+import ImageUpload from "./ImageUpload";
 import TabItem from "./TabItem";
+import TextInputs from "./TextInputs";
 
 type NewPostFormProps = {
     user: User;
@@ -69,7 +70,8 @@ export default function NewPostForm({ user }: NewPostFormProps) {
         title: "",
         body: "",
     });
-    const [selectedFile, setSelectedFile] = useState<string>();
+
+    const {selectedFile, setSelectedFile, onSelectFile} = useSelectedFile();
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState(false);
     async function handleCreatePost() {
@@ -110,19 +112,6 @@ export default function NewPostForm({ user }: NewPostFormProps) {
         }
         setLoading(false);
     }
-    function onSelectImage(e: ChangeEvent<HTMLInputElement>) {
-        const file = e.target.files?.[0];
-        if (!file) return;
-        const reader = new FileReader();
-        if (file) {
-            reader.readAsDataURL(file);
-        }
-        reader.onload = (readerEvent) => {
-            if (readerEvent.target?.result) {
-                setSelectedFile(readerEvent.target.result as string);
-            }
-        };
-    }
 
     function onTextChange(
         e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -160,7 +149,7 @@ export default function NewPostForm({ user }: NewPostFormProps) {
                     <ImageUpload
                         selectedFile={selectedFile}
                         setSelectedFile={setSelectedFile}
-                        onSelectImage={onSelectImage}
+                        onSelectImage={onSelectFile}
                         setSelectedTab={setSelectedTab}
                     />
                 )}

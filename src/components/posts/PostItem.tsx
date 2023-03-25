@@ -1,6 +1,17 @@
 import { Post } from "@/atoms/postsAtom";
 import { DeleteOutlined } from "@ant-design/icons";
-import { Flex, Icon, Image, Skeleton, Stack, Text } from "@chakra-ui/react";
+import {
+    Alert,
+    AlertIcon,
+    Button,
+    CloseButton,
+    Flex,
+    Icon,
+    Image,
+    Skeleton,
+    Stack,
+    Text,
+} from "@chakra-ui/react";
 import moment from "moment";
 import { useState } from "react";
 import {
@@ -18,7 +29,7 @@ type Props = {
     userIsCreator: boolean;
     userVoteValue?: number;
     onVote: () => {};
-    onDeletePost: () => {};
+    onDeletePost: (post: Post) => Promise<boolean>;
     onSelectPost: () => void;
 };
 
@@ -31,6 +42,22 @@ export default function PostItem({
     onSelectPost,
 }: Props) {
     const [loadingImg, setLoadingImg] = useState(true);
+    const [loadingDelete, setLoadingDelete] = useState(false);
+    const [err, setErr] = useState(false);
+    async function handleDelete() {
+        setLoadingDelete(true);
+        try {
+            const success = await onDeletePost(post);
+            if (!success) {
+                throw new Error("Failed to delete post");
+            }
+            console.log("post is deleted successfully.");
+        } catch (error: any) {
+            setErr(true);
+            /* setErr(error.message); */
+        }
+        setLoadingDelete(false);
+    }
     return (
         <Flex
             border="1px solid"
@@ -58,7 +85,9 @@ export default function PostItem({
                     onClick={onVote}
                     cursor="pointer"
                 />
-                <Text my={1} fontSize="sm">{post.voteStatus}</Text>
+                <Text my={1} fontSize="sm">
+                    {post.voteStatus}
+                </Text>
                 <Icon
                     as={
                         userVoteValue === 1
@@ -72,6 +101,19 @@ export default function PostItem({
                 />
             </Flex>
             <Flex direction="column" width="100%">
+                {err && (
+                    <Alert status="error">
+                        <AlertIcon />
+                        Error Deleting this post!
+                        <CloseButton
+                            alignSelf="flex-start"
+                            position="absolute"
+                            right={2}
+                            top={2}
+                            onClick={()=>setErr(false)}
+                        />
+                    </Alert>
+                )}
                 <Stack spacing={1} p="10px">
                     <Stack
                         direction="row"
@@ -91,13 +133,19 @@ export default function PostItem({
                     <Text fontSize="0.83rem">{post.body}</Text>
                     {post.imageURL && (
                         <Flex justify="center" align="center" py={1}>
-                            {loadingImg && <Skeleton width="100%" height="200px" borderRadius={4} />}
+                            {loadingImg && (
+                                <Skeleton
+                                    width="100%"
+                                    height="200px"
+                                    borderRadius={4}
+                                />
+                            )}
                             <Image
                                 src={post.imageURL}
                                 alt="post image"
                                 maxHeight="460px"
-                                display={loadingImg ? "none": "unset"}
-                                onLoad={()=>setLoadingImg(false)}
+                                display={loadingImg ? "none" : "unset"}
+                                onLoad={() => setLoadingImg(false)}
                             />
                         </Flex>
                     )}
@@ -133,17 +181,22 @@ export default function PostItem({
                         <Icon as={Bookmark} mr={2} />
                         <Text fontSize="sm">Save</Text>
                     </Flex>
-                    <Flex
-                        align="center"
+                    <Button
+                        variant="unstyled"
+                        display="flex"
+                        alignItems="center"
                         p="8px 10px"
                         borderRadius={4}
                         _hover={{ bg: "red.400", color: "white" }}
                         cursor="pointer"
-                        onClick={onDeletePost}
+                        fontWeight="normal"
+                        onClick={handleDelete}
+                        isLoading={loadingDelete}
+                        loadingText="Deleting"
                     >
                         <Icon as={DeleteOutlined} mr={2} />
                         <Text fontSize="sm">Delete</Text>
-                    </Flex>
+                    </Button>
                 </Flex>
             </Flex>
         </Flex>

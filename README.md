@@ -10,8 +10,9 @@ A Reddit clone built with Next.js, Firebase v9, Chakra UI, TypeScript, and Recoi
 
 ## Features
 - [x] Users can create an account and log in.
-- [ ] Todo: Users can create communities.
-- [ ] Todo: Users can create, edit and delete posts.
+- [x] Users can create communities.
+- [x] Todo: Users can create and delete posts.
+- [ ] Todo: Users can edit posts.
 - [ ] Todo: Users can upvote and downvote posts.
 - [ ] Todo: Users can comment on posts.
 - [ ] Todo: Users can view a list of posts and filter by subreddit.

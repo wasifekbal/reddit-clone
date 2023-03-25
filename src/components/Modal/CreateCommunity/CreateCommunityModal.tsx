@@ -18,9 +18,10 @@ import {
     ModalHeader,
     ModalOverlay,
     Stack,
-    Text
+    Text,
 } from "@chakra-ui/react";
 import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
+import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
 import { EyeFill, LockFill, PersonFill } from "react-bootstrap-icons";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -36,11 +37,11 @@ export default function CreateCommunityModal({}: Props) {
     const [communityType, setCommunityType] = useState("public");
     const [err, setErr] = useState("");
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const text = e.target.value;
-        if (text.length > 21)
-            return;
+        if (text.length > 21) return;
         setCharRem(21 - text.length);
         setCommunityName(text);
     };
@@ -91,6 +92,10 @@ export default function CreateCommunityModal({}: Props) {
                         isModerator: true,
                     }
                 );
+                setTimeout(() => {
+                    setModalState({ open: false });
+                    router.push(`/r/${communityName}`);
+                }, 2000);
             });
         } catch (error: any) {
             console.log("createCommunity err", error);
@@ -153,7 +158,8 @@ export default function CreateCommunityModal({}: Props) {
                                     borderColor: "black",
                                 }}
                                 value={communityName}
-                                onChange={handleChange} />
+                                onChange={handleChange}
+                            />
                         </InputGroup>
                         <Text
                             fontSize="xs"
@@ -180,7 +186,8 @@ export default function CreateCommunityModal({}: Props) {
                                         <Icon
                                             as={PersonFill}
                                             fontSize={20}
-                                            color="gray.500" />
+                                            color="gray.500"
+                                        />
                                         <Text
                                             fontSize="sm"
                                             fontWeight={600}
@@ -206,7 +213,8 @@ export default function CreateCommunityModal({}: Props) {
                                         <Icon
                                             as={EyeFill}
                                             fontSize={20}
-                                            color="gray.500" />
+                                            color="gray.500"
+                                        />
                                         <Text
                                             fontSize="sm"
                                             fontWeight={600}
@@ -232,7 +240,8 @@ export default function CreateCommunityModal({}: Props) {
                                         <Icon
                                             as={LockFill}
                                             fontSize={20}
-                                            color="gray.500" />
+                                            color="gray.500"
+                                        />
                                         <Text
                                             fontSize="sm"
                                             fontWeight={600}
